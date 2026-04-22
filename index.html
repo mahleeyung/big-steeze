@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Big Steeze Luxury</title>
+
+<style>
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  background:#0a0a0a;
+  color:#fff;
+}
+
+/* HEADER */
+header {
+  display:flex;
+  justify-content:space-between;
+  padding:20px 40px;
+  border-bottom:1px solid rgba(255,215,0,0.3);
+}
+
+header h1 {
+  color:gold;
+}
+
+header button {
+  background:gold;
+  border:none;
+  padding:10px 15px;
+  cursor:pointer;
+}
+
+/* HERO */
+.hero {
+  height:90vh;
+  background:url('https://images.unsplash.com/photo-1524592094714-0f0654e20314') center/cover;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  position:relative;
+}
+
+.hero::after {
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.7);
+}
+
+.hero-content {
+  position:relative;
+  z-index:2;
+}
+
+.hero h2 {
+  font-size:3rem;
+  color:gold;
+}
+
+/* PRODUCTS */
+.section {
+  padding:60px 40px;
+}
+
+.section h3 {
+  text-align:center;
+  margin-bottom:30px;
+  color:gold;
+}
+
+.products {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:25px;
+}
+
+.card {
+  background:rgba(255,255,255,0.05);
+  padding:15px;
+  text-align:center;
+  border:1px solid rgba(255,215,0,0.2);
+  transition:0.3s;
+}
+
+.card:hover {
+  transform:translateY(-8px);
+}
+
+.card img {
+  width:100%;
+  height:200px;
+  object-fit:cover;
+}
+
+.card h4 {
+  margin:10px 0;
+}
+
+.card button {
+  padding:10px;
+  border:none;
+  background:gold;
+  cursor:pointer;
+}
+
+/* CART */
+.cart {
+  position:fixed;
+  right:-350px;
+  top:0;
+  width:300px;
+  height:100%;
+  background:#111;
+  padding:20px;
+  transition:0.4s;
+  border-left:2px solid gold;
+}
+
+.cart.active {
+  right:0;
+}
+
+.cart h2 {
+  color:gold;
+  margin-bottom:15px;
+}
+
+.cart ul {
+  list-style:none;
+}
+
+.cart li {
+  margin-bottom:10px;
+}
+
+.checkout {
+  margin-top:20px;
+  padding:10px;
+  width:100%;
+  background:gold;
+  border:none;
+  cursor:pointer;
+}
+
+/* FOOTER */
+footer {
+  text-align:center;
+  padding:20px;
+  border-top:1px solid rgba(255,215,0,0.2);
+  margin-top:40px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>BIG STEEZE</h1>
+  <button onclick="toggleCart()">🛒 Cart</button>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <h2>Timeless Steeze</h2>
+    <p>Luxury Watches & Premium Eyewear</p>
+  </div>
+</section>
+
+<section class="section">
+  <h3>Watches</h3>
+  <div class="products">
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314">
+      <h4>Gold Watch</h4>
+      <p>$120</p>
+      <button onclick="addToCart('Gold Watch',120)">Add to Cart</button>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30">
+      <h4>Black Chronograph</h4>
+      <p>$150</p>
+      <button onclick="addToCart('Black Chronograph',150)">Add to Cart</button>
+    </div>
+
+  </div>
+</section>
+
+<section class="section">
+  <h3>Eyewear</h3>
+  <div class="products">
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083">
+      <h4>Luxury Shades</h4>
+      <p>$80</p>
+      <button onclick="addToCart('Luxury Shades',80)">Add to Cart</button>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9">
+      <h4>Designer Frames</h4>
+      <p>$95</p>
+      <button onclick="addToCart('Designer Frames',95)">Add to Cart</button>
+    </div>
+
+  </div>
+</section>
+
+<div class="cart" id="cart">
+  <h2>Your Cart</h2>
+  <ul id="cartItems"></ul>
+  <p>Total: $<span id="total">0</span></p>
+  <button class="checkout" onclick="checkout()">Checkout</button>
+</div>
+
+<footer>
+  <p>@bigsteeze_luxury</p>
+  <p>© 2026 Big Steeze Luxury</p>
+</footer>
+
+<script>
+let cart = [];
+
+function toggleCart(){
+  document.getElementById("cart").classList.toggle("active");
+}
+
+function addToCart(name, price){
+  cart.push({name, price});
+  updateCart();
+}
+
+function updateCart(){
+  let list = document.getElementById("cartItems");
+  let total = 0;
+  list.innerHTML = "";
+
+  cart.forEach(item=>{
+    let li = document.createElement("li");
+    li.textContent = item.name + " - $" + item.price;
+    list.appendChild(li);
+    total += item.price;
+  });
+
+  document.getElementById("total").textContent = total;
+}
+
+function checkout(){
+  alert("🚀 Next step: Connect Paystack to receive payments.");
+}
+</script>
+
+</body>
+</html>
